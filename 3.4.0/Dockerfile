@@ -16,7 +16,7 @@ RUN apt-get update && \
 
 USER ${NB_USER}    
 WORKDIR ${HOME}
-    R --quiet -e "IRkernel::installspec()" && \
+RUN R --quiet -e "IRkernel::installspec()" && \
     jupyter serverextension enable --user --py nbserverproxy && \
     jupyter serverextension enable --user --py nbrsessionproxy && \
     jupyter nbextension install    --user --py nbrsessionproxy && \
