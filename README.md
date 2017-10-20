@@ -21,7 +21,7 @@ _This approach works on any machine on which you have Docker installed._
 The `rocker/binder` images can be run like any other docker image:
 
 ```
-docker -p 8888:8888 run rocker/binder
+docker run -p 8888:8888 run rocker/binder
 ```
 
 Note that binder will run JuyterHub on port `8888` by default.  The above
