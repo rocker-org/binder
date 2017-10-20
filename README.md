@@ -1,6 +1,6 @@
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/joethorley/stability-badges#experimental)
 
-![](img/rocker.png) ![](img/binder-logo.png) 
+![](img/rocker.png) ![](img/binder.png) 
 
 # rocker/binder
 
