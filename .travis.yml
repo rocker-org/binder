@@ -1,0 +1,14 @@
+sudo: required
+
+services:
+  - docker
+
+## Make sure all containers build without error.
+before_install: 
+  - docker build -t binder .
+
+script:
+  - docker run -ti binder R --version
+  - docker run -ti binder jupyter --version
+  - docker run -ti binder python3 --version
+ 
