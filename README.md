@@ -7,7 +7,7 @@
 
 # rocker/binder
 
-Adds [binder](http://binder.org) abilities on top of the `rocker/tidyverse` images. 
+Adds [binder](http://mybinder.org/) abilities on top of the `rocker/tidyverse` images. 
 
 
 ## Deploy methods
