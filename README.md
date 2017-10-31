@@ -24,13 +24,13 @@ The `rocker/binder` images can be run like any other docker image:
 docker run -p 8888:8888 rocker/binder
 ```
 
-Note that binder will run JuyterHub on port `8888` by default.  The above
+Note that binder will run Juyter Notebook on port `8888` by default.  The above
 command will print to the terminal (and the docker container log) the URL
 which includes a randomly generated token for secure login, so be sure to
 include that in the URL you paste into the browser.
 
 
-Once inside JupyterHub, RStudio Server should be an option under the menu
+Once inside Jupyter Notebook, RStudio Server should be an option under the menu
 "New":
 
 ![](img/rstudio-session.jpg)
@@ -80,5 +80,10 @@ USER ${NB_USER}
 
 ## Credits
 
-https://twitter.com/twitter/statuses/921165684188393472
+* [Ryan Lovett](http://github.com/ryanlovett) for writing the core part of this,
+  [nbrsessionproxy](http://github.com/jupyterhub/nbrsessionproxy).
+* [Taylor Reiter](https://github.com/taylorreiter) for testing & shaping this.
+* [Yuvi Panda](https://github.com/yuvipanda) & [Aaron Culich](http://github.com/aculich) for bringing it together on Binder.
+* [Chris Holdgraf](http://github.com/choldgraf/) for this [nice GIF](https://twitter.com/choldgraf/status/921165684188393472)
+* [Beta Tim](https://github.com/betatim) for this [nice GIF](https://twitter.com/betatim/status/921156659166277634)
 
