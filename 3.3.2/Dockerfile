@@ -28,6 +28,8 @@ RUN mkdir -p ${VENV_DIR} && chown -R ${NB_USER} ${VENV_DIR}
 
 USER ${NB_USER}
 RUN python3 -m venv ${VENV_DIR} && \
+    # Explicitly install a new enough version of pip
+    pip3 install pip==9.0.1 && \
     pip3 install --no-cache-dir \
          notebook==5.2 \
          git+https://github.com/jupyterhub/nbrsessionproxy.git@6eefeac11cbe82432d026f41a3341525a22d6a0b \
@@ -43,3 +45,6 @@ RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
 
 
 CMD jupyter notebook --ip 0.0.0.0
+
+
+## If extending this image, remember to switch back to USER root to apt-get
