@@ -1,5 +1,7 @@
 [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/joethorley/stability-badges#experimental)
 [![Build Status](https://travis-ci.org/rocker-org/binder.svg?branch=master)](https://travis-ci.org/rocker-org/binder)
+[![](https://img.shields.io/docker/pulls/rocker/binder.svg)](https://hub.docker.com/r/rocker/binder) [![](https://img.shields.io/docker/automated/rocker/binder.svg)](https://hub.docker.com/r/rocker/binder/builds)
+<!-- [![](https://images.microbadger.com/badges/image/rocker/binder.svg)](https://microbadger.com/images/rocker/binder) --> 
 
 
 
