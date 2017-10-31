@@ -2,7 +2,11 @@ FROM rocker/tidyverse:latest
 ENV NB_USER rstudio
 ENV NB_UID 1000
 ENV VENV_DIR /srv/venv
+
+# Set ENV for all programs...
 ENV PATH ${VENV_DIR}/bin:$PATH
+# And set ENV for R! It doesn't read from the environment...
+RUN echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron
 
 # The `rsession` binary that is called by nbrsessionproxy to start R doesn't seem to start
 # without this being explicitly set
@@ -33,21 +37,8 @@ RUN python3 -m venv ${VENV_DIR} && \
     jupyter nbextension enable     --sys-prefix --py nbrsessionproxy
 
 
-RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')"
-
-# For some reason, R doesn't seem to want to interpret PATH from the environment!
-#
-#   rstudio@32b818e938c3:~$ echo $PATH
-#   /srv/venv/bin:/usr/lib/rstudio-server/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-#   rstudio@32b818e938c3:~$ R --quiet -e 'Sys.getenv("PATH")'
-#   > Sys.getenv("PATH")
-#   [1] "/usr/lib/rstudio-server/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-#
-# This causes it to never find the `jupyter` script in ${VENV_DIR}/bin.
-# This is the only hack that seems to work.
-RUN R --quiet -e "Sys.setenv(PATH='${PATH}'); IRkernel::installspec(prefix='${VENV_DIR}')"
-
-
+RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
+    R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
 
 
 CMD jupyter notebook --ip 0.0.0.0
