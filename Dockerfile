@@ -1,4 +1,5 @@
 FROM rocker/tidyverse:latest
+
 ENV NB_USER rstudio
 ENV NB_UID 1000
 ENV VENV_DIR /srv/venv
