@@ -80,5 +80,10 @@ USER ${NB_USER}
 
 ## Credits
 
-https://twitter.com/twitter/statuses/921165684188393472
+* [Ryan Lovett](http://github.com/ryanlovett) for writing the core part of this,
+  [nbrsessionproxy](http://github.com/jupyterhub/nbrsessionproxy).
+* [Taylor Reiter](https://github.com/taylorreiter) for testing & shaping this.
+* [Yuvi Panda](https://github.com/yuvipanda) & [Aaron Culich](http://github.com/aculich) for bringing it together on Binder.
+* [Chris Holdgraf](http://github.com/choldgraf/) for this [nice GIF](https://twitter.com/choldgraf/status/921165684188393472)
+* [Beta Tim](https://github.com/betatim) for this [nice GIF](https://twitter.com/betatim/status/921156659166277634)
 
