@@ -32,8 +32,8 @@ RUN python3 -m venv ${VENV_DIR} && \
     pip3 install pip==9.0.1 && \
     pip3 install --no-cache-dir \
          notebook==5.2 \
-         git+https://github.com/jupyterhub/nbrsessionproxy.git@6eefeac11cbe82432d026f41a3341525a22d6a0b \
-         git+https://github.com/jupyterhub/nbserverproxy.git@5508a182b2144d29824652d8977b32302517c8bc && \
+         nbserverproxy==0.3 \
+         git+https://github.com/jupyterhub/nbrsessionproxy.git@6eefeac11cbe82432d026f41a3341525a22d6a0b && \
     jupyter serverextension enable --sys-prefix --py nbserverproxy && \
     jupyter serverextension enable --sys-prefix --py nbrsessionproxy && \
     jupyter nbextension install    --sys-prefix --py nbrsessionproxy && \
