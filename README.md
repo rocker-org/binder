@@ -67,7 +67,7 @@ to get the latest avialable version of R and R packages.
 No additional lines are needed unless you want to install further libraries. In
 that case, you will need to first switch to root user to run `apt-get`, and then
 switch back to `$NB_USER` (`rstudio`) to keep JupterHub startup happy.
-For instance:
+For instance, say you want to install from `apt-get` or populate the repo files to the default directory:
 
 ```bash
 FROM rocker/binder:3.4.2
@@ -75,6 +75,7 @@ FROM rocker/binder:3.4.2
 USER root
 RUN apt-get update && apt-get -y install libv8-dev
 
+COPY . /home/rstudio/
 
 USER ${NB_USER}
 ```
