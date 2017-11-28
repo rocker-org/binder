@@ -26,12 +26,6 @@ RUN apt-get update && \
 # This allows non-root to install python libraries if required
 RUN mkdir -p ${VENV_DIR} && chown -R ${NB_USER} ${VENV_DIR}
 
-# Copy repo into ${HOME} and run any install.R script we find
-COPY . ${HOME}
-RUN chown -R ${NB_UID} ${HOME}
-RUN if [ -f install.R ]; then R --quiet -f install.R; fi
-
-
 USER ${NB_USER}
 RUN python3 -m venv ${VENV_DIR} && \
     # Explicitly install a new enough version of pip
