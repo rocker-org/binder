@@ -13,6 +13,9 @@ RUN echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron
 # without this being explicitly set
 ENV LD_LIBRARY_PATH /usr/local/lib/R/lib
 
+## Add Shiny (while still root)
+RUN export ADD=shiny && bash /etc/cont-init.d/add
+
 ENV HOME /home/${NB_USER}
 WORKDIR ${HOME}
 
