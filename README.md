@@ -76,8 +76,9 @@ USER root
 RUN apt-get update && apt-get -y install libv8-dev
 
 COPY . /home/rstudio/
+RUN chown -R rstudio:rstudio * .*
 
-USER ${NB_USER}
+USER rstudio
 ```
 
 
