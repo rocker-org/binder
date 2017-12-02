@@ -81,6 +81,7 @@ RUN chown -R rstudio:rstudio * .*
 USER rstudio
 ```
 
+See https://github.com/binder-examples/dockerfile-rstudio for a minimal example.
 
 ## Credits
 
