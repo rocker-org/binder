@@ -70,15 +70,14 @@ switch back to `$NB_USER` (`rstudio`) to keep JupterHub startup happy.
 For instance, say you want to install from `apt-get` or populate the repo files to the default directory:
 
 ```bash
-FROM rocker/binder:3.4.2
+FROM rocker/binder:3.4.3
 
 USER root
 RUN apt-get update && apt-get -y install libv8-dev
 
-COPY . /home/rstudio/
-RUN chown -R rstudio:rstudio * .*
-
-USER rstudio
+COPY . ${HOME}
+RUN chown -R ${NB_USER} ${HOME}
+USER ${NB_USER}
 ```
 
 See https://github.com/binder-examples/dockerfile-rstudio for a minimal example.
