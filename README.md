@@ -12,10 +12,53 @@
 Adds [binder](http://mybinder.org/) abilities on top of the `rocker/tidyverse` images. 
 
 
-## Deploy methods
+# Deploy methods
 
 
-### Using Docker
+## Using beta.mybinder.org services
+
+_This approach uses the public binder cloud and requires no installation_
+
+
+Just add a file named `Dockerfile` with the following contents to the root of a GitHub
+repository: 
+ 
+
+```bash
+FROM rocker/binder:3.4.2
+
+## Copies your repo files into the Docker Container
+COPY . ${HOME}
+RUN chown -R ${NB_USER} ${HOME}
+
+## Become normal user again
+USER ${NB_USER}
+
+## Run an install.R script, if it exists.
+RUN if [ -f install.R ]; then R --quiet -f install.R; fi
+
+```
+
+If you add an `install.R` file to the root directory of your GitHub repo as well, any R commands in that file will automatically be run as well.  This should make it easier for users to install additional R packages from CRAN, GitHub etc by just writing R code to do so.  
+
+You can extend this Dockerfile if necessary to include additional system dependencies.
+
+To launch on https://beta.mybinder.org, go to that address and enter the
+`https` address of your GitHub repository.  You can also create a shiny badge for your `README.md` by adding the following markdown text:
+
+```
+[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/<GITHUB_USER>/<REPO>/<BRANCH>)
+```
+
+filling in `<GITHUB_USER>`, `<REPO>` and `<BRANCH>` as appropriate.  Here is an example badge to launch the `binder-examples/dockerfile-rstudio` repo.  
+
+[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/binder-examples/dockerfile-rstudio/master)
+
+
+See https://github.com/binder-examples/dockerfile-rstudio for a minimal example.
+
+
+## Running on your own machines, Using Docker
 
 
 _This approach works on any machine on which you have Docker installed._
@@ -31,6 +74,7 @@ command will print to the terminal (and the docker container log) the URL
 which includes a randomly generated token for secure login, so be sure to
 include that in the URL you paste into the browser.
 
+## Opening RStudio once Binder Launches
 
 Once inside Jupyter Notebook, RStudio Server should be an option under the menu
 "New":
@@ -40,47 +84,9 @@ Once inside Jupyter Notebook, RStudio Server should be an option under the menu
 That should start you into an RStudio session (with no further login required).
 
 
-### Using beta.mybinder.org services
-
-_This approach uses the public binder cloud and requires no installation_
 
 
-Add a Dockerfile with the following contents to the root of a GitHub
-repository.  
- 
 
-```bash
-FROM rocker/binder:3.4.2
-```
-
-Extend as necessary (see below).  Then go to <beta.mybinder.org> and enter the
-`https` address of your repository to launch your instance on the public Binder
-infrastructure.
-
-
-##### Details
-
-
-The `3.4.2` indicates the version of R requested. Use a specific version to ensure a consistent build environment or use `latest`
-to get the latest avialable version of R and R packages.     
-
-No additional lines are needed unless you want to install further libraries. In
-that case, you will need to first switch to root user to run `apt-get`, and then
-switch back to `$NB_USER` (`rstudio`) to keep JupterHub startup happy.
-For instance, say you want to install from `apt-get` or populate the repo files to the default directory:
-
-```bash
-FROM rocker/binder:3.4.3
-
-USER root
-RUN apt-get update && apt-get -y install libv8-dev
-
-COPY . ${HOME}
-RUN chown -R ${NB_USER} ${HOME}
-USER ${NB_USER}
-```
-
-See https://github.com/binder-examples/dockerfile-rstudio for a minimal example.
 
 ## Credits
 
