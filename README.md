@@ -42,7 +42,7 @@ RUN if [ -f install.R ]; then R --quiet -f install.R; fi
 
 If you add an `install.R` file to the root directory of your GitHub repo as well, any R commands in that file will automatically be run as well.  This should make it easier for users to install additional R packages from CRAN, GitHub etc by just writing R code to do so.  
 
-*Note* You can extend this Dockerfile if necessary to include additional system dependencies; see [Troubleshooting](/troubleshooting) below.
+*Note* You can extend this Dockerfile if necessary to include additional system dependencies; see [Troubleshooting](#troubleshooting) below.
 
 ### Want Button!
 
