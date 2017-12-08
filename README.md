@@ -42,7 +42,9 @@ RUN if [ -f install.R ]; then R --quiet -f install.R; fi
 
 If you add an `install.R` file to the root directory of your GitHub repo as well, any R commands in that file will automatically be run as well.  This should make it easier for users to install additional R packages from CRAN, GitHub etc by just writing R code to do so.  
 
-You can extend this Dockerfile if necessary to include additional system dependencies.
+*Note* You can extend this Dockerfile if necessary to include additional system dependencies; see [Troubleshooting](/troubleshooting) below.
+
+### Want Button!
 
 To launch on https://beta.mybinder.org, go to that address and enter the
 `https` address of your GitHub repository.  You can also create a shiny badge for your `README.md` by adding the following markdown text:
@@ -85,8 +87,22 @@ Once inside Jupyter Notebook, RStudio Server should be an option under the menu
 That should start you into an RStudio session (with no further login required).
 
 
+## Troubleshooting
+
+**It didn't work! What do I do now?**.  If you are installing additional R packages, this will sometimes fail when a package requires an external library that is not found on the container.  We're working on a more elegant solution for this case, but meanwhile, you'll need to modify the Dockerfile to install these libraries.  For instance, the `gsl` [R package page reads](https://cran.r-project.org/web/packages/gsl/)
 
 
+```
+SystemRequirements:	Gnu Scientific Library version >= 1.12
+```
+
+To solve this, you will need to add the following line to your Dockerfile, right after the line that says `USER root`:
+
+```
+RUN apt-get update && apt-get -y install libgsl-dev
+```
+
+Or, just get in touch by opening an issue. We'll try and resolve common cases so more things work out of the box.  
 
 
 ## Credits
