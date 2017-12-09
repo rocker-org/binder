@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:3.3.2
+FROM rocker/geospatial:3.3.2
 
 ENV NB_USER rstudio
 ENV NB_UID 1000
