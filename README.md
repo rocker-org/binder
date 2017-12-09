@@ -9,7 +9,7 @@
 
 # rocker/binder
 
-Adds [binder](http://mybinder.org/) abilities on top of the `rocker/tidyverse` images. 
+Adds [binder](http://mybinder.org/) abilities on top of the [`rocker/geospatial`](https://hub.docker.com/r/rocker/geospatial) images. 
 
 
 # Deploy methods
