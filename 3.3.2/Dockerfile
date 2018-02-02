@@ -31,8 +31,7 @@ RUN python3 -m venv ${VENV_DIR} && \
     # Explicitly install a new enough version of pip
     pip3 install pip==9.0.1 && \
     pip3 install --no-cache-dir \
-         notebook==5.2 \
-         nbrsessionproxy==0.4.1 && \
+         nbrsessionproxy==0.6.1 && \
     jupyter serverextension enable --sys-prefix --py nbrsessionproxy && \
     jupyter nbextension install    --sys-prefix --py nbrsessionproxy && \
     jupyter nbextension enable     --sys-prefix --py nbrsessionproxy
