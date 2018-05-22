@@ -3,6 +3,8 @@ latest:
 
 devel/Dockerfile: Dockerfile
 	export R_VERSION=devel && make update
+3.5.0/Dockerfile: Dockerfile
+	export R_VERSION=3.5.0 && make update
 3.4.1/Dockerfile: Dockerfile
 	export R_VERSION=3.4.1 && make update
 3.4.0/Dockerfile: Dockerfile
@@ -19,7 +21,7 @@ devel/Dockerfile: Dockerfile
 
 update:
 	cp Dockerfile ${R_VERSION}/Dockerfile
-	sed -i 's/tidyverse:latest/tidyverse:${R_VERSION}/' ${R_VERSION}/Dockerfile
+	sed -i 's/geospatial:latest/geospatial:${R_VERSION}/' ${R_VERSION}/Dockerfile
 
 
 clean:
