@@ -25,7 +25,7 @@ repository:
  
 
 ```bash
-FROM rocker/binder:3.4.2
+FROM rocker/binder:3.4.3
 
 ## Copies your repo files into the Docker Container
 USER root
@@ -50,15 +50,15 @@ To launch on https://beta.mybinder.org, go to that address and enter the
 `https` address of your GitHub repository.  You can also create a shiny badge for your `README.md` by adding the following markdown text:
 
 ```
-[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/<GITHUB_USER>/<REPO>/<BRANCH>)
+[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/<GITHUB_USER>/<REPO>/<BRANCH>?urlpath=rstudio)
 ```
 
 filling in `<GITHUB_USER>`, `<REPO>` and `<BRANCH>` as appropriate.  Here is an example badge to launch the `binder-examples/dockerfile-rstudio` repo.  
 
-[![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/binder-examples/dockerfile-rstudio/master)
+[![Binder](http://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/rocker-org/binder/master?urlpath=rstudio)
 
 
-See https://github.com/binder-examples/dockerfile-rstudio for a minimal example.
+See the [binder/](/binder)  subdirectory for a minimal example.  Note: you can always put your `Dockerfile` in `binder/Dockerfile` if you don't want to put it in the root directory.  
 
 
 ## Running on your own machines, Using Docker
@@ -79,7 +79,9 @@ include that in the URL you paste into the browser.
 
 ## Opening RStudio once Binder Launches
 
-Once inside Jupyter Notebook, RStudio Server should be an option under the menu
+:sparkles: **NEW** :sparkles:: By including `?urlpath=rstudio` on the binder urls in the examples above, Binder should automatically open in an RStudio instance, rather than a Jupyter notebook.  Otherwise, see the documentation below for navigating to an RStudio instance from Jupyter:
+
+**Old method**:  Once inside Jupyter Notebook, RStudio Server should be an option under the menu
 "New":
 
 ![](img/rstudio-session.jpg)
