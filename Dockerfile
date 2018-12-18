@@ -3,6 +3,8 @@ FROM rocker/geospatial:latest
 ENV NB_USER rstudio
 ENV NB_UID 1000
 ENV VENV_DIR /srv/venv
+ARG GITHUB_PAT
+ENV GITHUB_PAT=$GITHUB_PAT
 
 # Set ENV for all programs...
 ENV PATH ${VENV_DIR}/bin:$PATH
