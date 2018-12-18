@@ -1,14 +1,12 @@
 sudo: required
-
 services:
-  - docker
-
-## Make sure all containers build without error.
-before_install: 
-  - docker build -t binder .
-
+- docker
+before_install:
+- docker build -t binder .
 script:
-  - docker run -ti binder R --version
-  - docker run -ti binder jupyter --version
-  - docker run -ti binder python3 --version
- 
+- docker run -ti binder R --version
+- docker run -ti binder jupyter --version
+- docker run -ti binder python3 --version
+env:
+  matrix:
+    secure: CrGTsvlbA/fxTvrV4iKx7UxG9cPkJO5w2Kdu/eft+7kloFFZdommsWa67h/AiUfTWErdpTvNXsxO4UVUTPTxMWp2Rgv6kw40M2IA7drRDBxyqP+c0mBii8iTPOPc3DoCP5sww8qGpJo95K69WF2djJo9i5O0wRaSDbKWgc9e+ZuL+l+H2+I4aklPGU1AM2XNL1DLmLwWq55O2Br2vqY5H0QXvaxU4ui+AbxT5Xii9dnqk4TsLk6UaBbsIZYO71PKcffZ0fjuiisYFGaMi0YHsZwKs+Kj87aSlovao+bf6HJJHjAyZRsR1bXM9qRGTtRh6Mxsc+aWoRL6lhDAJKjYLaKA/D6wY0lSFaQYl+NZEFXDwurvgu9+REMtl8zTIecrngSIvMRa+MHi3XvIchtJXZdf1I7H/URsHFknPM4fhDfJPQij8d8cWakqQb7Wt+6w35WznumRiAmejwkxU0nyX7IZDC+ezFnFjML+HiFtAM7B42DN19oVAY8vXOkYq1qZCMjALrJT549V401BdhEIszviSBI+7zkrARGwlIaW7B3EqDSSpQN8xrwoHaQHhwJ+YucV3fBArpKc06h7SAOyd0uHo/FSercasTDgukjapEit3uLrh8M/g8y52dLM+Q8dguK5zieNsxMaq6uX3tBlW2fddkjW7VyBZwSFkTkj1G0=
