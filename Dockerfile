@@ -1,10 +1,8 @@
-FROM rocker/geospatial:latest
+FROM rocker/geospatial:3.3.1
 
 ENV NB_USER rstudio
 ENV NB_UID 1000
 ENV VENV_DIR /srv/venv
-ARG GITHUB_PAT
-ENV GITHUB_PAT=$GITHUB_PAT
 
 # Set ENV for all programs...
 ENV PATH ${VENV_DIR}/bin:$PATH
@@ -47,4 +45,3 @@ CMD jupyter notebook --ip 0.0.0.0
 
 
 ## If extending this image, remember to switch back to USER root to apt-get
-
