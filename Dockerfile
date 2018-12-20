@@ -1,4 +1,4 @@
-FROM rocker/geospatial:3.4.1
+FROM rocker/geospatial:3.4.2
 
 ENV NB_USER rstudio
 ENV NB_UID 1000
@@ -28,10 +28,11 @@ RUN mkdir -p ${VENV_DIR} && chown -R ${NB_USER} ${VENV_DIR}
 
 USER ${NB_USER}
 RUN python3 -m venv ${VENV_DIR} && \
-    # Explicitly install a new enough version of pip
-    pip3 install pip==18.1 && \
     pip3 install --no-cache-dir \
-         nbrsessionproxy==0.8.0 && \
+         notebook==5.2 \
+         git+https://github.com/jupyterhub/nbrsessionproxy.git@6eefeac11cbe82432d026f41a3341525a22d6a0b \
+         git+https://github.com/jupyterhub/nbserverproxy.git@5508a182b2144d29824652d8977b32302517c8bc && \
+    jupyter serverextension enable --sys-prefix --py nbserverproxy && \
     jupyter serverextension enable --sys-prefix --py nbrsessionproxy && \
     jupyter nbextension install    --sys-prefix --py nbrsessionproxy && \
     jupyter nbextension enable     --sys-prefix --py nbrsessionproxy
