@@ -22,8 +22,15 @@ Adds [binder](http://mybinder.org/) abilities on top of the [`rocker/geospatial`
 
 _This approach uses the public binder cloud and requires no installation_
 
+Add the following components to your repository:
 
-Just add a file named `Dockerfile` with the following contents to the root of a GitHub
+1. A `Dockerfile`
+1. Optionally, a badge to the `README.md`
+
+
+### `Dockerfile`
+
+Add a file named `Dockerfile` with the following contents to the root of a GitHub
 repository: 
  
 
@@ -40,14 +47,13 @@ USER ${NB_USER}
 
 ## Run an install.R script, if it exists.
 RUN if [ -f install.R ]; then R --quiet -f install.R; fi
-
 ```
 
 If you add an `install.R` file to the root directory of your GitHub repo as well, any R commands in that file will automatically be run as well.  This should make it easier for users to install additional R packages from CRAN, GitHub etc by just writing R code to do so.  
 
 *Note* You can extend this Dockerfile if necessary to include additional system dependencies; see [Troubleshooting](#troubleshooting) below.
 
-### Want Button!
+### Badge
 
 To launch on https://mybinder.org, go to that address and enter the
 `https` address of your GitHub repository.  You can also create a shiny badge for your `README.md` by adding the following markdown text:
