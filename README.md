@@ -62,7 +62,10 @@ To launch on https://mybinder.org, go to that address and enter the
 [![Binder](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/<GITHUB_USER>/<REPO>/<BRANCH>?urlpath=rstudio)
 ```
 
-filling in `<GITHUB_USER>`, `<REPO>` and `<BRANCH>` as appropriate.  Here is an example badge to launch the `binder-examples/dockerfile-rstudio` repo.  
+filling in `<GITHUB_USER>`, `<REPO>` and `<BRANCH>` as appropriate. 
+The `usethis::use_binder_badge()` function does this for you.
+
+Here is an example badge to launch the `binder-examples/dockerfile-rstudio` repo.  
 
 [![Binder](http://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/rocker-org/binder/master?urlpath=rstudio)
 
