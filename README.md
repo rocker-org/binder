@@ -80,7 +80,7 @@ Here is an example badge to launch the `binder-examples/dockerfile-rstudio` repo
 [![Binder](http://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/rocker-org/binder/master?urlpath=rstudio)
 
 
-See the [binder/](/binder)  subdirectory for a minimal example.  Note: you can always put your `Dockerfile` in `binder/Dockerfile` if you don't want to put it in the root directory.  
+See the [binder/](/binder)  subdirectory for a minimal example.  Note: you can always [put your `Dockerfile` in `binder/Dockerfile`](https://mybinder.readthedocs.io/en/latest/faq.html#can-i-put-my-configuration-files-outside-the-root-of-my-repository) if you don't want to put it in the root directory.  
 
 
 ## Running on your own machines, Using Docker
