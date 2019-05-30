@@ -18,7 +18,7 @@ Adds [binder](http://mybinder.org/) abilities on top of the [`rocker/geospatial`
 # Deploy methods
 
 
-## Using beta.mybinder.org services
+## Using mybinder.org services
 
 _This approach uses the public binder cloud and requires no installation_
 
@@ -49,7 +49,7 @@ If you add an `install.R` file to the root directory of your GitHub repo as well
 
 ### Want Button!
 
-To launch on https://beta.mybinder.org, go to that address and enter the
+To launch on https://mybinder.org, go to that address and enter the
 `https` address of your GitHub repository.  You can also create a shiny badge for your `README.md` by adding the following markdown text:
 
 ```
