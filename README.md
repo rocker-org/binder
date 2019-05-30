@@ -35,8 +35,12 @@ repository:
  
 
 ```bash
-## "latest" does not work on binder
-FROM rocker/binder:3.6.0
+## Use a tag instead of "latest" for reproducibility
+FROM rocker/binder:latest
+
+## Declares build arguments
+ARG NB_USER
+ARG NB_UID
 
 ## Copies your repo files into the Docker Container
 USER root
