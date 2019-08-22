@@ -8,6 +8,7 @@ ENV VENV_DIR /srv/venv
 ENV PATH ${VENV_DIR}/bin:$PATH
 # And set ENV for R! It doesn't read from the environment...
 RUN echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron
+RUN echo "export PATH=${PATH}" >> ${HOME}/.profile
 
 # The `rsession` binary that is called by nbrsessionproxy to start R doesn't seem to start
 # without this being explicitly set
@@ -31,11 +32,7 @@ RUN python3 -m venv ${VENV_DIR} && \
     # Explicitly install a new enough version of pip
     pip3 install pip==9.0.1 && \
     pip3 install --no-cache-dir \
-         nbrsessionproxy==0.6.1 && \
-    jupyter serverextension enable --sys-prefix --py nbrsessionproxy && \
-    jupyter nbextension install    --sys-prefix --py nbrsessionproxy && \
-    jupyter nbextension enable     --sys-prefix --py nbrsessionproxy
-
+         jupyter-rsession-proxy
 
 RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
     R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
@@ -45,4 +42,3 @@ CMD jupyter notebook --ip 0.0.0.0
 
 
 ## If extending this image, remember to switch back to USER root to apt-get
-
