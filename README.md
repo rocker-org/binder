@@ -14,6 +14,7 @@
 
 Adds [binder](http://mybinder.org/) abilities on top of the [`rocker/geospatial`](https://hub.docker.com/r/rocker/geospatial) images. 
 
+***For documentation for R >= 4.0.0, for images `r-ver`, `rstudio`, `tidyverse`, `verse`, `geospatial`, `shiny`, and `binder`, please see the [`rocker-versioned2` repository`](https://github.com/rocker-org/rocker-versioned2).*** 
 
 # Deploy methods
 
