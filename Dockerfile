@@ -2,10 +2,11 @@ FROM rocker/geospatial:3.6.3
 
 ENV NB_USER rstudio
 ENV NB_UID 1000
-ENV VENV_DIR /srv/venv
+ENV HOME /home/${NB_USER}
+ENV CONDA_DIR /opt/conda
 
 # Set ENV for all programs...
-ENV PATH ${VENV_DIR}/bin:$PATH
+ENV PATH ${CONDA_DIR}/bin:$PATH
 # And set ENV for R! It doesn't read from the environment...
 RUN echo "PATH=${PATH}" >> /usr/local/lib/R/etc/Renviron
 RUN echo "export PATH=${PATH}" >> ${HOME}/.profile
@@ -14,29 +15,26 @@ RUN echo "export PATH=${PATH}" >> ${HOME}/.profile
 # without this being explicitly set
 ENV LD_LIBRARY_PATH /usr/local/lib/R/lib
 
-ENV HOME /home/${NB_USER}
 WORKDIR ${HOME}
 
-RUN apt-get update && \
-    apt-get -y install python3-venv python3-dev && \
-    apt-get purge && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Create a venv dir owned by unprivileged user & set up notebook in it
-# This allows non-root to install python libraries if required
-RUN mkdir -p ${VENV_DIR} && chown -R ${NB_USER} ${VENV_DIR}
+RUN mkdir -p ${CONDA_DIR} && \
+    chown ${NB_USER}:${NB_USER} ${CONDA_DIR}
 
 USER ${NB_USER}
-RUN python3 -m venv ${VENV_DIR} && \
-    # Explicitly install a new enough version of pip
-    pip3 install pip==9.0.1 && \
+
+RUN curl -sSL https://github.com/conda-forge/miniforge/releases/download/4.8.3-4/Miniforge3-4.8.3-4-Linux-x86_64.sh > /tmp/miniforge-installer.sh && \
+    bash /tmp/miniforge-installer.sh -f -b -p ${CONDA_DIR} && \
+    rm /tmp/miniforge-installer.sh
+
+
+USER ${NB_USER}
+
+RUN python3 -m venv ${CONDA_DIR} && \
     pip3 install --no-cache-dir \
          jupyter-rsession-proxy
 
 RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
-    R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
-
+    R --quiet -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
 
 CMD jupyter notebook --ip 0.0.0.0
 
