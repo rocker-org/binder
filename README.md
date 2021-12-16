@@ -1,4 +1,4 @@
-# # Template for RStudio on Binder / JupyterHub
+#  Template for RStudio on Binder / JupyterHub
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/yuvipanda/rstudio-binder-template/HEAD?urlpath=rstudio)
 
