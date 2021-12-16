@@ -27,6 +27,11 @@ Use `install.packages` or `devtools::install_version`.
 install.packages("ggplot2")
 ```
 
+Packages are installed from [packagemanager.rstudio.com](https://packagemanager.rstudio.com/client/#/),
+and binary packages are preferred wherever possible. For some R packages,
+you might need to install system packages via apt - you can do so by writing
+out a list of apt package names in `apt.txt`.
+
 ### 3. Modify the Binder Badge in the README.md
 
 The 'Launch on Binder' badge in this README points to the template repository.
