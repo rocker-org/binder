@@ -29,16 +29,18 @@ RUN mkdir -p ${VENV_DIR} && chown -R ${NB_USER} ${VENV_DIR}
 
 USER ${NB_USER}
 RUN python3 -m venv ${VENV_DIR} && \
-    # Explicitly install a new enough version of pip
+    # Explicitly install a new enough version of pip, as the base version is too old
     pip3 install pip==9.0.1 && \
     pip3 install --no-cache-dir \
-         jupyter-rsession-proxy
+        # This is for R 3.6 + older version of RStudio, so we need older
+        # version of jupyter-rsession-proxy.
+        jupyter-rsession-proxy<2.0 notebook
 
 RUN R --quiet -e "devtools::install_github('IRkernel/IRkernel')" && \
     R --quiet -e "IRkernel::installspec(prefix='${VENV_DIR}')"
 
 
-CMD jupyter notebook --ip 0.0.0.0
+CMD jupyter server --ip 0.0.0.0
 
 
 ## If extending this image, remember to switch back to USER root to apt-get
