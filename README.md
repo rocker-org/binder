@@ -43,3 +43,28 @@ RStudio
 
 Finally, add the R code you want to demo to the repository! Cleanup the README
 too so it talks about your code, not these instructions on setting up this repo
+
+## Troubleshooting
+
+**It didn't work! What do I do now?**.  If you are installing additional R
+*packages, this will sometimes fail when a package requires an external library
+*that is not found on the container.  We're working on a more elegant solution
+*for this case, but meanwhile, you'll need to modify the Dockerfile to install
+*these libraries.  For instance, the `gsl` [R package page
+*reads](https://packagemanager.rstudio.com/client/#/repos/1/packages/gsl)
+
+
+```
+Install System Prerequisites for Ubuntu 18.04 (Bionic)
+apt-get install -y libgsl0-dev
+```
+
+To solve this, you will need to add the following line to your `apt.txt` file:
+
+```
+libgsl0-dev
+```
+
+
+Or, just get in touch by opening an issue. We'll try and resolve common cases so
+more things work out of the box.
