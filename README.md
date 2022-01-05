@@ -6,8 +6,8 @@ Generate a Git repository that can run R code with RStudio on
 the browser via [mybinder.org](https://mybinder.org) or any JupyterHub
 from this template repository!
 
-Based on the excellent [rocker/binder](https://hub.docker.com/r/rocker/binder)
-image maintained by the [Rocker project](https://www.rocker-project.org/)
+Based on the [rocker/geospatial](https://hub.docker.com/r/rocker/geospatial)
+image.
 
 ## How to use this reop
 
