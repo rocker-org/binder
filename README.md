@@ -1,6 +1,6 @@
-#  Template for RStudio on Binder / JupyterHub
+# Template for RStudio on Binder / JupyterHub
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/yuvipanda/rstudio-binder-template/HEAD?urlpath=rstudio)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rocker-org/binder/HEAD?urlpath=rstudio)
 
 Generate a Git repository that can run R code with RStudio on
 the browser via [mybinder.org](https://mybinder.org) or any JupyterHub
@@ -53,18 +53,16 @@ too so it talks about your code, not these instructions on setting up this repo
 *these libraries.  For instance, the `gsl` [R package page
 *reads](https://packagemanager.rstudio.com/client/#/repos/1/packages/gsl)
 
-
-```
-Install System Prerequisites for Ubuntu 18.04 (Bionic)
+```shell
+# Install System Prerequisites for Ubuntu 20.04 (focal)
 apt-get install -y libgsl0-dev
 ```
 
 To solve this, you will need to add the following line to your `apt.txt` file:
 
-```
+```txt
 libgsl0-dev
 ```
-
 
 Or, just get in touch by opening an issue. We'll try and resolve common cases so
 more things work out of the box.
