@@ -9,7 +9,7 @@ from this template repository!
 Based on the [rocker/geospatial](https://hub.docker.com/r/rocker/geospatial)
 image.
 
-## How to use this reop
+## How to use this repo
 
 ### 1. Create a new repo using this as a template
 
