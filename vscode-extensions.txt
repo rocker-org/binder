@@ -1,0 +1,8 @@
+ms-python.python
+ms-toolsai.jupyter
+ms-vscode.live-server
+quarto.quarto
+posit.shiny
+reditorsupport.r
+continue.continue
+alefragnani.project-manager
