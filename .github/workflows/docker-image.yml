@@ -1,0 +1,32 @@
+name: Binder Image
+on:
+  workflow_dispatch: null
+  push:
+    paths: 
+      - Dockerfile
+      - environment.yml
+      - install.r
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: free extra disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          df -h
+      - uses: actions/checkout@v3
+      - name: Publish to GitHub Container Registry
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: rocker-org/binder
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+      - name: Publish to Docker Registry
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: rocker/binder
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
