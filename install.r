@@ -12,7 +12,7 @@ install.packages(c(
 'V8'))
 
 install.packages("IRkernel")
-IRkernel::installspec(user = FALSE)
+IRkernel::installspec(user = FALSE, sys_prefix=TRUE)
 
 ## Spatial set
 install.packages(c('sf', 'stars', 'gdalcubes', 'terra', 'tmap', 'mapgl'))
