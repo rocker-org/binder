@@ -15,7 +15,12 @@ RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/in
 RUN adduser "$NB_USER" sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >>/etc/sudoers
 
 # Install R, RStudio
-RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/install_r.sh | bash
+COPY install_r.sh /tmp/install_r.sh
+RUN bash /tmp/install_r.sh
+
+COPY install_bspm.sh /tmp/install_bspm.sh
+RUN bash /tmp/install_bspm.sh
+
 RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/install_rstudio.sh | bash
 
 # Configure Runiverse
