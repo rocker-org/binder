@@ -24,7 +24,7 @@ RUN bash /tmp/install_bspm.sh
 RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/install_rstudio.sh | bash
 
 # Configure Runiverse
-COPY Rprofile $/usr/lib/R/etc/Rprofile.site
+COPY Rprofile /usr/lib/R/etc/Rprofile.site
 
 ## Add rstudio's binaries to path for quarto
 ENV PATH=$PATH:/usr/lib/rstudio-server/bin/quarto/bin
