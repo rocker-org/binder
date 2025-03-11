@@ -31,14 +31,14 @@ ENV PATH=$PATH:/usr/lib/rstudio-server/bin/quarto/bin
 
 USER ${NB_USER}
 
-COPY vscode-extensions.txt vscode-extensions.txt
-RUN xargs -n 1 code-server --install-extension < vscode-extensions.txt
+COPY vscode-extensions.txt /tmp/vscode-extensions.txt
+RUN xargs -n 1 code-server --install-extension < /tmp/vscode-extensions.txt
 
-COPY environment.yml environment.yml
+COPY environment.yml /tmp/environment.yml
 RUN conda update --all --solver=classic -n base -c conda-forge conda && \
-    conda env update --file environment.yml
+    conda env update --file /tmp/environment.yml
 
 # When run at build-time, install.r automagically handles any necessary apt-gets
-COPY install.r install.r
-RUN Rscript install.r
+COPY install.r /tmp/install.r
+RUN Rscript /tmp/install.r
 
