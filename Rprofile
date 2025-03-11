@@ -39,6 +39,12 @@ local({
       Sys.setenv(GITHUB_PAT = paste(dummy, collapse = 'e'))
     }
 
+  } else {
+
+    options(bspm.sudo = TRUE)
+    options(bspm.version.check=FALSE)
+    suppressMessages(bspm::enable())
+
   }
 
 })
