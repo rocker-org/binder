@@ -3,6 +3,8 @@ FROM $BASE
 
 # Make code-server extensions etc persist to container, not hub
 ENV XDG_DATA_HOME=/opt/share
+## Add rstudio's binaries to path for quarto
+ENV PATH=$PATH:/usr/lib/rstudio-server/bin/quarto/bin
 
 USER root
 # code-server (VSCode)
@@ -15,19 +17,8 @@ RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/in
 RUN adduser "$NB_USER" sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >>/etc/sudoers
 
 # Install R, RStudio
-COPY install_r.sh /tmp/install_r.sh
-RUN bash /tmp/install_r.sh
-
-COPY install_bspm.sh /tmp/install_bspm.sh
-RUN bash /tmp/install_bspm.sh
-
+RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/install_r.sh | bash
 RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/install_rstudio.sh | bash
-
-# Configure Runiverse
-COPY Rprofile /usr/lib/R/etc/Rprofile.site
-
-## Add rstudio's binaries to path for quarto
-ENV PATH=$PATH:/usr/lib/rstudio-server/bin/quarto/bin
 
 USER ${NB_USER}
 
