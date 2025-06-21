@@ -1,8 +1,9 @@
+alefragnani.project-manager
+cline.cline
 ms-python.python
 ms-toolsai.jupyter
 ms-vscode.live-server
-quarto.quarto
 posit.shiny
+quarto.quarto
 reditorsupport.r
-continue.continue
-alefragnani.project-manager
+
