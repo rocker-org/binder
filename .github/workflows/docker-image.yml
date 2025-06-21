@@ -6,6 +6,7 @@ on:
       - Dockerfile
       - environment.yml
       - install.r
+      - vscode-extensions.txt
 jobs:
   build:
     runs-on: ubuntu-latest
