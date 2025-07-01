@@ -1,8 +1,8 @@
 ARG BASE=quay.io/jupyter/minimal-notebook:ubuntu-24.04
 FROM $BASE
 
-# Make code-server extensions etc persist to container, not hub
-ENV XDG_DATA_HOME=/opt/share
+# this env var is recognized by jupyter-vscode-proxy:
+ENV CODE_EXTENSIONSDIR=/opt/share/code-server
 ## Add rstudio's binaries to path for quarto
 ENV PATH=$PATH:/usr/lib/rstudio-server/bin/quarto/bin
 
@@ -23,7 +23,7 @@ RUN curl -s https://raw.githubusercontent.com/rocker-org/ml/refs/heads/master/in
 USER ${NB_USER}
 
 COPY vscode-extensions.txt /tmp/vscode-extensions.txt
-RUN xargs -n 1 code-server --install-extension < /tmp/vscode-extensions.txt
+RUN xargs -n 1 code-server --extensions-dir ${CODE_EXTENSIONSDIR}  --install-extension < /tmp/vscode-extensions.txt
 
 COPY environment.yml /tmp/environment.yml
 RUN conda update --all --solver=classic -n base -c conda-forge conda && \
