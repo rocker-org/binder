@@ -1,5 +1,6 @@
 # tidyverse/dev set
 install.packages(c(
+'archive',
 'languageserver',
 'httpgd',
 'quarto',
