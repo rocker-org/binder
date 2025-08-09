@@ -6,3 +6,5 @@ posit.shiny
 quarto.quarto
 reditorsupport.r
 saoudrizwan.claude-dev
+posit.air-vscode
+
