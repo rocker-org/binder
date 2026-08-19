@@ -1,0 +1,6 @@
+# On top of rocker/ml's requirements-cpu.txt
+mystmd
+jupyterlab-myst
+# repo2docker/BinderHub expect a `jupyter-notebook` entrypoint; rocker/ml ships
+# jupyterlab only, which does not provide it.
+notebook
