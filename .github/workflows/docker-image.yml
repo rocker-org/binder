@@ -16,48 +16,134 @@ on:
       - vscode-extensions.txt
       - .github/workflows/docker-image.yml
 
+# Build each architecture on its own native runner (arm64 on ubuntu-24.04-arm,
+# no QEMU), push each by digest to both registries, then assemble one multi-arch
+# manifest natively in each. Ported from rocker-org/ml's build-ml.yml; the
+# previous QEMU-emulated arm64 build took roughly an hour.
+env:
+  GHCR_IMAGE: ghcr.io/rocker-org/binder
+  DOCKER_IMAGE: rocker/binder
+  TAGS: latest
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
     permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm   # native arm64 runner, no QEMU
     steps:
-      - name: free extra disk space
+      - name: Prepare platform name
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> "$GITHUB_ENV"
+
+      - name: Free Disk Space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
           df -h
 
       - uses: actions/checkout@v5
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # One build, both registries -- buildx pushes the same manifest to each
-      # rather than re-running the build per registry.
-      - name: Build and push
-        uses: docker/build-push-action@v5
+      - name: Build and push by digest (GHCR)
+        id: build
+        uses: docker/build-push-action@v7
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/rocker-org/binder:latest
-            rocker/binder:latest
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=${{ env.GHCR_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+
+      # Re-push the same (cache-hot, no rebuild) content by digest to Docker Hub
+      # so the per-arch digest exists in both registries; the merge job then
+      # assembles the manifest natively in each (no fragile cross-registry copy).
+      - name: Push to Docker Hub
+        id: dockerhub
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=${{ env.DOCKER_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+
+      # The two pushes are NOT guaranteed to share a digest (provenance /
+      # created-timestamp differ), so record each registry's own per-arch
+      # digest and let the merge job build each manifest from its own.
+      - name: Export digests
+        run: |
+          mkdir -p /tmp/digests/ghcr /tmp/digests/dockerhub
+          touch "/tmp/digests/ghcr/${GHCR_DIGEST#sha256:}"
+          touch "/tmp/digests/dockerhub/${DOCKER_DIGEST#sha256:}"
+        env:
+          GHCR_DIGEST: ${{ steps.build.outputs.digest }}
+          DOCKER_DIGEST: ${{ steps.dockerhub.outputs.digest }}
+
+      - name: Upload digests
+        uses: actions/upload-artifact@v6
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    name: Merge manifests and push tags
+    runs-on: ubuntu-latest
+    needs: build
+    permissions: write-all
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v7
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Create multi-arch manifests (GHCR + Docker Hub)
+        working-directory: /tmp/digests
+        run: |
+          ghcr_refs=$(for f in ghcr/*; do printf "${GHCR_IMAGE}@sha256:%s " "$(basename "$f")"; done)
+          dock_refs=$(for f in dockerhub/*; do printf "${DOCKER_IMAGE}@sha256:%s " "$(basename "$f")"; done)
+          for t in $TAGS; do
+            docker buildx imagetools create -t "${GHCR_IMAGE}:${t}" $ghcr_refs
+            docker buildx imagetools create -t "${DOCKER_IMAGE}:${t}" $dock_refs
+          done
 
       - name: Inspect
-        run: docker buildx imagetools inspect ghcr.io/rocker-org/binder:latest
+        run: docker buildx imagetools inspect "${GHCR_IMAGE}:latest"
