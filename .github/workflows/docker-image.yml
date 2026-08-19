@@ -1,12 +1,21 @@
 name: Binder Image
+
+# The R/RStudio layers here are curled from rocker-org/ml@master at build time,
+# so they drift forward with no commit in this repo to trigger a rebuild. The
+# weekly cron is what actually keeps this image current -- see issue #60.
 on:
-  workflow_dispatch: null
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 0'  # Weekly on Sunday, after rocker/ml's midnight build
   push:
-    paths: 
+    branches: [master, main]
+    paths:
       - Dockerfile
       - environment.yml
       - install.r
       - vscode-extensions.txt
+      - .github/workflows/docker-image.yml
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,42 +23,41 @@ jobs:
     steps:
       - name: free extra disk space
         run: |
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
           df -h
-      - uses: actions/checkout@v3
-      
+
+      - uses: actions/checkout@v5
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      
-      - name: Build and push to GitHub Container Registry
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ghcr.io/rocker-org/binder:latest
-      
-      - name: Build and push to Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: rocker/binder:latest
 
+      # One build, both registries -- buildx pushes the same manifest to each
+      # rather than re-running the build per registry.
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/rocker-org/binder:latest
+            rocker/binder:latest
+
+      - name: Inspect
+        run: docker buildx imagetools inspect ghcr.io/rocker-org/binder:latest
