@@ -1,0 +1,22 @@
+# Ubuntu 26.04 ships sudo-rs (a Rust reimplementation) as the default `sudo`.
+# It ignores `--preserve-env`, which docker-stacks' start.sh relies on when it
+# drops from root to ${NB_USER} after an NB_UID/NB_GID remap. Two consequences
+# have to be repaired here, or the remapped container starts degraded:
+#
+#  1. secure_path governs command lookup, and /opt/venv/bin is not in the
+#     default, so `jupyter` is simply not found ("command not found").
+#  2. Without --preserve-env, VIRTUAL_ENV / CODE_EXTENSIONSDIR / XDG_CONFIG_HOME
+#     and friends are stripped. The last two are load-bearing in this stack:
+#     they keep code-server extensions and app config outside the JupyterHub
+#     $HOME mount, so losing them silently relocates both into $HOME.
+#
+# sudo-rs does honour env_keep, so listing the variables explicitly restores
+# upstream start.sh behaviour without replacing Ubuntu's default sudo.
+#
+# The "zz-" prefix is load-bearing. start.sh itself generates
+# /etc/sudoers.d/path, prepending ${CONDA_DIR}/bin to secure_path -- and with
+# conda gone CONDA_DIR is empty, so it emits a secure_path with no /opt/venv/bin
+# at all. sudo reads sudoers.d in lexical order and later Defaults win, so this
+# file has to sort after "path" or it is silently overridden.
+Defaults secure_path="/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Defaults env_keep += "VIRTUAL_ENV NB_USER NB_UID NB_GID CODE_EXTENSIONSDIR XDG_CONFIG_HOME LD_LIBRARY_PATH PYTHONPATH"

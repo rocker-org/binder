@@ -39,3 +39,30 @@ RUN xargs -n 1 code-server --extensions-dir ${CODE_EXTENSIONSDIR} --install-exte
 # not carry. bspm/r2u resolves the system deps, so no apt-get here.
 COPY --chown=${NB_USER}:${NB_USER} install.r /tmp/install.r
 RUN Rscript /tmp/install.r && rm /tmp/install.r
+
+# Restore jupyter/docker-stacks' start.sh, lost when this image stopped deriving
+# from jupyter/minimal-notebook. It is what implements runtime NB_UID/NB_GID
+# remapping (plus CHOWN_HOME, NB_UMASK, GRANT_SUDO and friends); without it,
+# `docker run --user root -e NB_UID=1234` leaves the server running as root.
+# Vendored verbatim and pinned -- see start-hooks/README.md.
+# start.sh needs NB_GID declared (rocker/ml sets only NB_UID) or it expands empty
+# and groupadd fails. It must be a SHARED group, not jovyan's user-private one:
+# start.sh remaps via `userdel` + `useradd`, and userdel removes a private group
+# along with the user, after which `useradd --gid` fails on the now-missing group.
+# 100 (users) is what docker-stacks and the old minimal-notebook base used, and
+# jovyan is already a member.
+ENV NB_GID=100
+
+USER root
+COPY start-hooks/start.sh start-hooks/_docker_stacks_log.sh start-hooks/run-hooks.sh /usr/local/bin/
+# See the file's own header: Ubuntu 26.04's sudo-rs ignores --preserve-env, which
+# start.sh depends on to carry the environment across its root -> NB_USER drop.
+COPY start-hooks/sudoers-zz-jupyter-env /etc/sudoers.d/zz-jupyter-env
+RUN chmod +x /usr/local/bin/start.sh /usr/local/bin/_docker_stacks_log.sh /usr/local/bin/run-hooks.sh && \
+    chmod 0440 /etc/sudoers.d/zz-jupyter-env && visudo -c -f /etc/sudoers.d/zz-jupyter-env && \
+    mkdir -p /usr/local/bin/start-notebook.d /usr/local/bin/before-notebook.d
+USER ${NB_USER}
+
+# tini stays PID 1 (so zombies are still reaped) and start.sh runs inside it,
+# exactly as jupyter/minimal-notebook composed the two.
+ENTRYPOINT ["tini", "-g", "--", "start.sh"]
