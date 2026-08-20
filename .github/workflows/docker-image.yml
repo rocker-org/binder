@@ -39,10 +39,13 @@ jobs:
   build:
     name: Build ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
-    # Only the non-PR path writes packages; a PR build needs read access only.
+    # NOTE: `permissions` is parsed before expressions are evaluated, so it
+    # cannot be made conditional on github.event_name. A PR run simply never
+    # reaches a login or push step (see the gating below), and GitHub already
+    # issues fork PRs a read-only token regardless of what is requested here.
     permissions:
       contents: read
-      packages: ${{ github.event_name == 'pull_request' && 'read' || 'write' }}
+      packages: write
     strategy:
       fail-fast: false
       matrix:
