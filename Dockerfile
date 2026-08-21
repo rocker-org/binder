@@ -54,6 +54,21 @@ RUN Rscript /tmp/install.r && rm /tmp/install.r
 ENV NB_GID=100
 
 USER root
+
+# Make NB_GID=100 true rather than aspirational. rocker/ml gives jovyan a
+# user-private group (gid 1000), so with NB_GID=100 declared above, start.sh's
+# non-root path finds a mismatch it cannot fix without root and warns on every
+# single container start:
+#
+#   WARNING container must be started as root to change the desired user's
+#           group id with NB_GID="100"!
+#
+# Putting jovyan in users(100) -- which is what docker-stacks and the old
+# minimal-notebook base did, and which jovyan is already a supplementary member
+# of -- makes the declared and actual gid agree, so the warning goes away.
+# Files built as jovyan:jovyan keep group 1000, but jovyan still owns them by
+# uid, so access is unaffected.
+RUN usermod -g users ${NB_USER}
 COPY start-hooks/start.sh start-hooks/_docker_stacks_log.sh start-hooks/run-hooks.sh /usr/local/bin/
 # See the file's own header: Ubuntu 26.04's sudo-rs ignores --preserve-env, which
 # start.sh depends on to carry the environment across its root -> NB_USER drop.
