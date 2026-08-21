@@ -1,0 +1,10 @@
+# On top of rocker/ml-spatial's requirements-cpu.txt + extend/requirements-cpu.txt.
+# Everything binder's old environment.yml carried -- gh-scoped-creds, glances,
+# git-filter-repo, jupyter-resource-usage, jupyter-rsession-proxy,
+# jupyter-vscode-proxy, pypdf, jupyter-keepalive -- is already in the base.
+mystmd
+jupyterlab-myst
+
+# repo2docker/BinderHub launch via a `jupyter-notebook` entrypoint, which the
+# jupyterlab-only base does not provide.
+notebook

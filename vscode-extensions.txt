@@ -1,10 +1,2 @@
 alefragnani.project-manager
-ms-python.python
-ms-toolsai.jupyter
-ms-vscode.live-server
-posit.shiny
-quarto.quarto
-reditorsupport.r
 saoudrizwan.claude-dev
-posit.air-vscode
-

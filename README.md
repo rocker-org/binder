@@ -29,6 +29,7 @@ install.packages("ggplot2")
 Binary versions of packages will be quickly installed from [r2u](https://github.com/eddelbuettel/r2u) via [bspm](https://cloud.r-project.org/web/packages/bspm/index.html).  _There is no need to manually manage 'system' dependencies with apt-get, these are handled automatically in the Docker build phase_. 
 
 Commonly used packages in the `tidyverse` and `geospatial` collection are already installed, see [`install.r`](install.r)
+and the base image's own `install.r`.
 
 ### 3. Modify the Binder Badge in the README.md
 
@@ -37,3 +38,21 @@ You should modify it to point to your own repository. Keep the `urlpath=rstudio`
 parameter intact - that is what makes sure your repo will launch directly into
 RStudio
 
+### A note on the base image
+
+This image is a thin layer over
+[`rocker/ml-spatial`](https://github.com/rocker-org/ml), which provides Ubuntu
+26.04, R + RStudio Server, code-server, and a `/opt/venv` Python environment.
+
+It is **not** conda-based. Earlier versions of `rocker/binder` derived from
+`jupyter/minimal-notebook` and shipped conda at `/opt/conda`; that is gone, and
+`conda`/`mamba` are not available. Python packages are managed with `pip`/`uv`
+against `/opt/venv`:
+
+```
+RUN uv pip install --no-cache-dir some-package
+```
+
+Geospatial work links a single system GDAL with the Arrow/Parquet drivers
+enabled, shared by R (`sf`, `terra`, `stars`) and Python (`geopandas`,
+`rasterio`, `pyogrio`) alike, so `(Geo)Parquet` round-trips between them.
